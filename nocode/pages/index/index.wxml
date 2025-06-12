@@ -1,0 +1,91 @@
+<!-- pages/index/index.wxml -->
+<view class="container">
+  <!-- 搜索栏 -->
+  <view class="search-bar">
+    <view class="search-input">
+      <image src="/images/search.png" class="search-icon"></image>
+      <input 
+        type="text" 
+        placeholder="搜索商品" 
+        value="{{searchKeyword}}"
+        bindinput="onSearchInput"
+      />
+      <button class="search-btn" bindtap="searchProducts">搜索</button>
+    </view>
+  </view>
+
+  <!-- 轮播图 -->
+  <swiper class="banner-swiper" autoplay circular interval="3000">
+    <block wx:for="{{banners}}" wx:key="id">
+      <swiper-item>
+        <image src="{{item.imageUrl}}" mode="aspectFill"></image>
+      </swiper-item>
+    </block>
+  </swiper>
+
+  <!-- 分类导航 -->
+  <view class="category-nav">
+    <scroll-view scroll-x="true" class="category-scroll">
+      <view 
+        class="category-item {{currentTab === 0 ? 'active' : ''}}"
+        data-index="0"
+        bindtap="switchTab"
+      >
+        <image src="/images/category_all.png" class="category-icon"></image>
+        <text>全部</text>
+      </view>
+      <block wx:for="{{categories}}" wx:key="_id">
+        <view 
+          class="category-item {{currentTab === index + 1 ? 'active' : ''}}"
+          data-index="{{index + 1}}"
+          bindtap="switchTab"
+        >
+          <image src="{{item.icon}}" class="category-icon"></image>
+          <text>{{item.name}}</text>
+        </view>
+      </block>
+    </scroll-view>
+  </view>
+
+  <!-- 商品列表 - 瀑布流布局 -->
+  <view class="product-list">
+    <view class="waterfall-container">
+      <view class="waterfall-column" style="width: 49%;">
+        <block wx:for="{{products}}" wx:key="_id" wx:if="{{index % 2 === 0}}">
+          <view class="product-card" bindtap="goToProductDetail" data-id="{{item._id}}">
+            <image src="{{item.images[0]}}" mode="aspectFill" class="product-image"></image>
+            <view class="product-info">
+              <text class="product-name">{{item.name}}</text>
+              <view class="product-price">
+                <text class="current-price">¥{{item.price}}</text>
+                <text class="original-price" wx:if="{{item.promotionPrice && item.promotionPrice < item.price}}">¥{{item.promotionPrice}}</text>
+              </view>
+            </view>
+          </view>
+        </block>
+      </view>
+      <view class="waterfall-column" style="width: 49%;">
+        <block wx:for="{{products}}" wx:key="_id" wx:if="{{index % 2 === 1}}">
+          <view class="product-card" bindtap="goToProductDetail" data-id="{{item._id}}">
+            <image src="{{item.images[0]}}" mode="aspectFill" class="product-image"></image>
+            <view class="product-info">
+              <text class="product-name">{{item.name}}</text>
+              <view class="product-price">
+                <text class="current-price">¥{{item.price}}</text>
+                <text class="original-price" wx:if="{{item.promotionPrice && item.promotionPrice < item.price}}">¥{{item.promotionPrice}}</text>
+              </view>
+            </view>
+          </view>
+        </block>
+      </view>
+    </view>
+  </view>
+
+  <!-- 加载状态 -->
+  <view class="loading-more" wx:if="{{loading}}">
+    <text>加载中...</text>
+  </view>
+  <view class="no-more" wx:if="!hasMore && products.length > 0">
+    <text>没有更多了</text>
+  </view>
+</view>
