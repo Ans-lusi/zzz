@@ -1,5 +1,9 @@
 // server/config/index.js
 const path = require('path');
+const dotenv = require('dotenv');
+
+// 加载环境变量
+dotenv.config({ path: path.join(__dirname, '../../.env') });
 
 module.exports = {
   // 服务器配置
@@ -53,9 +57,9 @@ module.exports = {
     dir: path.join(__dirname, '../logs')
   },
   
-  // 初始管理员账户
+  // 初始管理员账户 - 生产环境应通过环境变量配置
   admin: {
-    username: 'admin',
-    password: '123456'
+    username: process.env.ADMIN_USERNAME || 'admin',
+    password: process.env.ADMIN_PASSWORD || '123456'
   }
 };
